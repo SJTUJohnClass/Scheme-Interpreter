@@ -32,7 +32,7 @@
 ├── src
 │   ├── shared.hpp
 │   ├── parser.cpp
-│   └── evaluation.hpp
+│   └── evaluation.cpp
 ```
 下面是可能对程序编写有帮助的一些文件
 ```
@@ -92,6 +92,6 @@ g++ -o score score.cpp
 
 具体要实现的语法可在[Grammar](docs/Grammar.md)查看。
 
-对于 `src` 中文件的说明可在[Intro](docs/Intro.md)查看。
+对于 解释器的介绍和对 `src` 中文件的说明可在[Intro](docs/Intro.md)查看。
 
 如果你想获取一些实现上的帮助， 可以参考[Implement](docs/Implement.md)。
