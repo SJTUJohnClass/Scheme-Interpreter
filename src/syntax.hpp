@@ -15,7 +15,6 @@ struct SyntaxBase {
 
 struct Syntax {
     SharedPtr<SyntaxBase> ptr;
-    // std :: shared_ptr<SyntaxBase> ptr;
     Syntax(SyntaxBase *);
     SyntaxBase* operator -> () const; 
     SyntaxBase& operator * ();

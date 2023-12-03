@@ -17,8 +17,7 @@ struct ExprBase
 };
 
 struct Expr {
-    // SharedPtr<ExprBase> ptr;
-    std :: shared_ptr<ExprBase> ptr;
+    SharedPtr<ExprBase> ptr;
     Expr(ExprBase *);
     ExprBase* operator -> () const;
     ExprBase& operator * ();

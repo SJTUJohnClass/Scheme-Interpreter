@@ -17,8 +17,7 @@ struct ValueBase {
 };
 
 struct Value {
-    // SharedPtr<ValueBase> ptr;
-    std :: shared_ptr<ValueBase> ptr;
+    SharedPtr<ValueBase> ptr;
     Value(ValueBase *);
     void show(std::ostream &);
     ValueBase* operator -> () const;
@@ -27,8 +26,7 @@ struct Value {
 };
 
 struct Assoc {
-//   SharedPtr<AssocList> ptr;
-    std :: shared_ptr<AssocList> ptr;
+  SharedPtr<AssocList> ptr;
   Assoc(AssocList *);
   AssocList* operator -> () const;
   AssocList& operator * ();
