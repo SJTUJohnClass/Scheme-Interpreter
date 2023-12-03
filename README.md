@@ -60,6 +60,8 @@ cmake --build build --target myscheme
 ```
 来运行你的解释器。
 
+> 想要输入 `myscheme` 直接运行你的程序？ 你可以参考[这个问题](https://stackoverflow.com/questions/56981754/how-to-make-a-programme-executable-anywhere-in-the-shell)
+
 ### 评测方式
 
 #### 提交
