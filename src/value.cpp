@@ -62,7 +62,6 @@ void Null::showCdr(std::ostream &os) {
 }
 
 void Terminate::show(std::ostream &os) {
-  os << "()";
 }
 
 void Pair::show(std::ostream &os) {
