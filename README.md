@@ -30,6 +30,7 @@
 你需要补充代码的部分为
 ```
 ├── src
+│   ├── shared.hpp
 │   ├── parser.cpp
 │   └── evaluation.hpp
 ```
@@ -44,6 +45,7 @@
 │   ├── syntax.hpp
 │   └── expr.hpp
 ```
+其中 `shared.hpp` 应为 SmartPointer 中你编写的 `SharedPtr` 对应的 `.hpp`。
 
 ### 项目编译
 
