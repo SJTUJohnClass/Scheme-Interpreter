@@ -30,8 +30,6 @@ Value False::eval(Assoc &e) {}
 
 Value Begin::eval(Assoc &e) {}
 
-Value syntaxToValue(const Syntax &syntax) {}
-
 Value Quote::eval(Assoc &e) {}
 
 Value MakeVoid::eval(Assoc &e) {}
