@@ -49,6 +49,11 @@ Syntax readItem(std::istream &is) {
     is.get();
     return readList(is);
   }
+  if (is.peek() == '\'')
+  {
+    is.get();
+    return readList(is);
+  }
   std::string s;
   do {
     int c = is.peek();

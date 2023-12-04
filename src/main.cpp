@@ -21,16 +21,17 @@ void REPL()
         Syntax stx = readSyntax(std :: cin); // read
         try
         {
+            Expr expr = stx -> parse(global_env); // parse
             // stx -> show(std :: cout); // syntax print
-            Expr expr = stx -> parse(); // parse
             Value val = expr -> eval(global_env);
             if (val -> v_type == V_TERMINATE)
                 break;
-            val -> show(std :: cout); // print
+            val -> show(std :: cout); // value print
         }
         catch (const RuntimeError &RE)
         {
-            std :: cout << RE.message();
+            // std :: cout << RE.message();
+            std :: cout << "RuntimeError";
         }
         puts("");
     }

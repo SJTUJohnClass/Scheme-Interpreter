@@ -17,7 +17,7 @@ void initPrimitives()
     primitives["void"] = E_VOID;
     primitives["eq?"] = E_EQQ;
     primitives["boolean?"] = E_BOOLQ;
-    primitives["integer?"] = E_INTQ;
+    primitives["fixnum?"] = E_INTQ;
     primitives["null?"] = E_NULLQ;
     primitives["pair?"] = E_PAIRQ;
     primitives["procedure?"] = E_PROCQ;
