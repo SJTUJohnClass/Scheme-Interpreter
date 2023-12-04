@@ -4,6 +4,7 @@
 
 - [需要实现的语法](#需要实现的语法)
 - [语法介绍](#语法介绍)
+    - [Before Grammar](#before-grammar)
     - [`constant`](#constant)
     - [`var`](#var)
     - [`(quote datum)`](#quote-datum)
@@ -18,7 +19,7 @@
         - [`void, exit`](#void-exit)
         - [`cons, car, cdr`](#cons-car-cdr)
         - [`not`](#not)
-        - [`boolean?, integer?, null?, pair?, procedure?`](#boolean-integer-null-pair-procedure)
+        - [`boolean?, fixnum?, null?, pair?, procedure?`](#boolean-fixnum-null-pair-procedure)
         - [`eq?`](#eq)
     - [`(expr expr*)`](#expr-expr)
 
@@ -52,6 +53,10 @@ expr   -->  constant
 下面对每个语法进行介绍， 语法中的 `primitive` 为 Library 中定义的函数（你可以认为 Library 是 C++ 的 STL， 你同样需要实现这一部分函数的解释执行）。
 
 ## 语法介绍
+
+### Before Grammar
+
+在介绍语法之前， 我们可能需要额外花时间介绍一下 `Closure`。 `Closure` 的中文为闭包， 一种简单的理解方式是 “闭包 = 函数 + 引用环境（作用域， 包含了所有的变量和它们所绑定的值）”， 观察 `Closure` 的实现可以发现它确实是这么被定义的。 在函数被定义出来时， 它的闭包中的作用域就是定义这个函数时这个函数所处的作用域。 对函数的求值即为， 在该函数的闭包的作用域中， 加上形参的具体值得到一个新的作用域， 并在这个新的作用域上对函数的函数体求值。
 
 ### `constant`
 
@@ -148,7 +153,21 @@ scm> (let ([x 1]) (let ([y x] [x 3]) (+ x y)))
 
 `letrec` 与 `let` 的规则相差无几， 但一些特殊的处理方式使得 `letrec` 可以实现递归调用。
 
-具体而言， `letrec` 会先将所有的 `var` 赋值为 `Value(nullptr)` 加入原作用域中得到新的作用域 `env1`（这里赋值成 `Value(nullptr)` 意义应被理解为该变量被定义但无法被使用， 如果想要获取该变量的值则会报错， 你可以理解成 C++ 中函数的声明）， 然后再对所有的 `[var expr]` 依次求值（像 `let` 中一样）， 不同的地方是这次求值始终在作用域 `env1` 而非原作用域上， 求值的结果会得到新作用域 `env2`（如果出现求值失败则报错， 你的程序应当能够处理这种情况）， 然后再返回在 `env2` 上对 `body` 求值的结果。
+具体而言， `letrec` 会先将所有的 `var` 赋值为 `Value(nullptr)` 加入原作用域中得到新的作用域 `env1`（这里赋值成 `Value(nullptr)` 意义应被理解为该变量被定义但无法被使用， 如果想要获取该变量的值则会报错， 你可以理解成 C++ 中函数的声明）， 然后再对所有的 `[var expr]` 依次求值（像 `let` 中一样）， 不同的地方是这次求值始终在作用域 `env1` 而非原作用域上， 求值的结果会得到新作用域 `env2`（如果出现求值失败则报错， 你的程序应当能够处理这种情况）。 此时， 需要注意的一点是， 假如 `[var expr]*` 中存在 `var` 被绑定到了 `Closure` 上， 则该 `Closure` 中的作用域应当被更改为 `env2` 而非原先的 `env1`（这个更改应当进行在 `env2` 中对应的 `var` 所绑定的值上， 由于我们是用指针实现作用域的， 这种对 `Closure` 的改变并不会改变 `env2` 所指向的内存空间）， 然后再返回在 `env2` 上对 `body` 求值的结果。
+
+举一个例子
+
+```
+(letrec 
+    ([fact 
+        (lambda (n)
+            (if (= n 0)
+                1
+                (* n (fact (- n 1)))))])
+    (fact 5))
+```
+
+此时最开始的作用域中没有变量的绑定， 所以 `env1 -> ([fact -> Value(nullptr)])`， 在求值过程后， `env2 -> ([fact -> Closure(env1)])`， 此时我们发现 `fact` 被绑定到了一个 `Closure` 上， 我们在 `env2` 中找到了对应的变量并做出更改， 最后的 `env2` 应为 `env2 -> ([fact -> Closure(env2)])`， 然后在新的 `env2` 上对 `(fact 5)` 求值。
 
 ```
 scm> (letrec ([x 1] [y x]) (+ x y))
@@ -229,11 +248,11 @@ scm> (not (lambda (x) x))
 #f
 ```
 
-#### `boolean?, integer?, null?, pair?, procedure?`
+#### `boolean?, fixnum?, null?, pair?, procedure?`
 
 类型检测操作， 操作数为 $1$ 个， 类型不限， 返回值为 `Boolean`， 若操作数为对应类型的值则返回 `#t`， 否则返回 `#f`。
 - `boolean?`： 检测操作数是否为 `Boolean`
-- `integer?`： 检测操作数是否为 `Integer`
+- `fixnum?`： 检测操作数是否为 `Integer`
 - `null?`： 检测操作数是否为 `Null`
 - `pair?`： 检测操作数是否为 `Pair`
 - `procedure?`： 检测操作数是否为 `Closure`
@@ -243,7 +262,7 @@ scm> (procedure? (lambda (x) x))
 #t
 scm> (pair? (car (cons 1 2)))
 #f
-scm> (let ([x 1]) (integer? x))
+scm> (let ([x 1]) (fixnum? x))
 #t
 ```
 
