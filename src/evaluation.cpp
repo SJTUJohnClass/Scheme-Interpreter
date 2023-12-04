@@ -16,7 +16,7 @@ Value Lambda::eval(Assoc &env) {}
 
 Value Apply::eval(Assoc &e) {}
 
-Value Letrec::eval(Assoc &e) {}
+Value Letrec::eval(Assoc &env) {}
 
 Value Var::eval(Assoc &e) {}
 
@@ -29,6 +29,8 @@ Value True::eval(Assoc &e) {}
 Value False::eval(Assoc &e) {}
 
 Value Begin::eval(Assoc &e) {}
+
+Value syntaxToValue(const Syntax &syntax) {}
 
 Value Quote::eval(Assoc &e) {}
 

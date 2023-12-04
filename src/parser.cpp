@@ -18,16 +18,16 @@ using std :: pair;
 extern std :: map<std :: string, ExprType> primitives;
 extern std :: map<std :: string, ExprType> reserved_words;
 
-Expr Syntax :: parse() {}
+Expr Syntax :: parse(Assoc &env) {}
 
-Expr Number :: parse() {}
+Expr Number :: parse(Assoc &env) {}
 
-Expr Identifier :: parse() {}
+Expr Identifier :: parse(Assoc &env) {}
 
-Expr TrueSyntax :: parse() {}
+Expr TrueSyntax :: parse(Assoc &env) {}
 
-Expr FalseSyntax :: parse() {}
+Expr FalseSyntax :: parse(Assoc &env) {}
 
-Expr List :: parse() {}
+Expr List :: parse(Assoc &env) {}
 
 #endif
