@@ -12,6 +12,8 @@
 
 此外， 由于我们用到了一小部分关于 C++ 中继承的内容， 你需要了解如何使用 [`dynamic_cast` 函数](https://www.runoob.com/cplusplus/cpp-casting-operators.html)来实现基类指针与派生类指针的转换。
 
+还有一个小提示， 变量的名字是可以与非 `primitive` 外的其他关键字相同的， 比如一个变量的名字可以为 `lambda, letrec` 等。
+
 ## Tips 1
 
 你需要实现的第一个部分是 Parser， 这一部分在 `parser.cpp` 中。
