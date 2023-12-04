@@ -1,5 +1,6 @@
 # Project 4: Scheme Interpreter
 > 项目文档编写参考自 ACM Class
+> DDL 12.30 23:59
 
 ## 目录
 
@@ -100,13 +101,14 @@ R = 112
 
 ### 分数组成
 
-- Task Completion: 80
+- Basic Task: 75
+- Extension: 5
 - Q & A: 10
 - Coding Conventions: 10
 
-## 帮助
+Basic Task 最后我们会统一评测你交上来的文件。
 
-对于 Scheme 语言的介绍可在[About-Scheme](docs/About-Scheme.md)查看。
+## 帮助
 
 具体要实现的语法可在[Grammar](docs/Grammar.md)查看。
 
