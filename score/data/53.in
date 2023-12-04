@@ -1,1 +1,1 @@
-(let () (boolean? #f))
+(if (car (cons #t #f)) 7 8)

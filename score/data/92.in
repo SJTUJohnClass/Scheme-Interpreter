@@ -1,3 +1,1 @@
-(let ([x 7] [y 4])
-  (or (and (fixnum? x) (= x 4) (fixnum? y) (= y 7))
-      (and (fixnum? x) (= x 7) (fixnum? y) (= y 4))))
+(letrec ((x 7) (f (lambda () x))) (f))

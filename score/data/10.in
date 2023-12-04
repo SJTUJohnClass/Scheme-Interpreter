@@ -1,1 +1,1 @@
-(car (quote (1 2)))
+(if #t (if 45 7 #f) #f)

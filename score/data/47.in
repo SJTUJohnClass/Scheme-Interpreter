@@ -1,1 +1,1 @@
-(if (void) 7 8)
+(let ((x 1) (y 5)) (cons x y) x)

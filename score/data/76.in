@@ -1,4 +1,1 @@
-((letrec ([length (lambda (ptr)
-                    (if (null? ptr) 0 (+ 1 (length (cdr ptr)))))])
-   length)
-  (quote (5 10 11 5 15)))
+(letrec () (begin (fixnum? 7) 10))

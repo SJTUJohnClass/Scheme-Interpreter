@@ -1,1 +1,1 @@
-(begin (void) 5)
+(if 10 #f #t)

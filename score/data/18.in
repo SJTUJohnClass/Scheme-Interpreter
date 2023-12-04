@@ -1,1 +1,1 @@
-(null? (quote (1 2)))
+(pair? (quote (1 2)))

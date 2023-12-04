@@ -1,1 +1,1 @@
-(letrec () (pair? (cons 1 (quote ()))))
+(let () (<= 7 8))

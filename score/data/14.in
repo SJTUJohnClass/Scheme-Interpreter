@@ -1,1 +1,1 @@
-(pair? (quote ()))
+(cons 1 (quote ()))

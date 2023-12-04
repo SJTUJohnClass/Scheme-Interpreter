@@ -1,1 +1,1 @@
-(boolean? #f)
+(car (quote (1 2)))

@@ -1,1 +1,1 @@
-(let ([x (quote (1 2))] [y (quote (1 2))]) (eq? x y))
+(letrec () (begin (< 7 8) 7))

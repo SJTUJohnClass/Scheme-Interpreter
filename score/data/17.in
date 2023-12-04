@@ -1,1 +1,1 @@
-(null? (quote ()))
+(if #t 1 2)

@@ -1,3 +1,12 @@
-((lambda (x)
-   (if (if (eq? x 5) x (and x 1 2 3 4 (or 6 7 8 9))) 3))
-  4)
+(letrec ((num-list? (lambda (ls)
+                      (if (null? ls)
+                          #t
+                          (if (fixnum? (car ls))
+                              (num-list? (cdr ls))
+                              #f))))
+         (list-product (lambda (ls)
+                         (if (null? ls)
+                             1
+                             (* (car ls) (list-product (cdr ls)))))))
+  (let ((ls (quote (1 2 3 4 5))))
+    (if (num-list? ls) (list-product ls) #f)))

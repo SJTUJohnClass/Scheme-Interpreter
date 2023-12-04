@@ -1,4 +1,5 @@
-(let ([t #t] [f #f])
-  (letrec ([even (lambda (x) (if (= x 0) t (odd (- x 1))))]
-           [odd (lambda (x) (if (= x 0) f (even (- x 1))))])
-    (odd 13)))
+(let ((x (cons (quote 1) (quote ()))))
+  (let ((x (cons (quote 2) x)))
+    (let ((x (cons (quote 3) x)))
+      (let ((x (cons (quote 4) x)))
+        (let ((x (cons (quote 5) x))) x)))))

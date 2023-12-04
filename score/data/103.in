@@ -1,6 +1,9 @@
-(let ([begin (lambda (x y) (+ x y))]
-      [set! (lambda (x y) (* x y))])
-  (let ([lambda (lambda (x) (begin 1 x))])
-    (let ([lambda (lambda (set! 1 2))])
-      (let ([let (set! lambda lambda)])
-        (begin let (set! lambda (set! 4 (begin 2 3))))))))
+(let ((x 7) (y 4))
+  (let ((t.6 (if (fixnum? x)
+                 (if (= x 4) (if (fixnum? y) (= y 7) #f) #f)
+                 #f)))
+    (if t.6
+        t.6
+        (if (fixnum? x)
+            (if (= x 7) (if (fixnum? y) (= y 4) #f) #f)
+            #f))))

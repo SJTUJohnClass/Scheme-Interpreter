@@ -1,3 +1,1 @@
-(+ (let ([x 7] [y 2])
-     (if (if (= x 7) (< y 0) (<= 0 y)) 77 88))
-   99)
+(begin (<= (quote 7) (quote 8)) (quote 7))

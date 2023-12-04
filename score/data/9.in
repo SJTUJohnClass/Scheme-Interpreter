@@ -1,1 +1,1 @@
-(cons 1 (quote ()))
+(let ((t.1 10)) (if t.1 t.1 #f))

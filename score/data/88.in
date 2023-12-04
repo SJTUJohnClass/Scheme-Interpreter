@@ -1,7 +1,17 @@
-(letrec ([ack (lambda (m n)
-                (if (= m 0)
-                    (+ n 1)
-                    (if (if (> m 0) (= n 0) #f)
-                        (ack (- m 1) 1)
-                        (ack (- m 1) (ack m (- n 1))))))])
-  (ack 2 4))
+(letrec ((count-leaves (lambda (p)
+                         (if (pair? p)
+                             (+ (count-leaves (car p))
+                                (count-leaves (cdr p)))
+                             1))))
+  (count-leaves
+    (cons
+      (cons (quote 0) (cons (quote 0) (quote 0)))
+      (cons
+        (cons
+          (cons (cons (quote 0) (cons (quote 0) (quote 0))) (quote 0))
+          (quote 0))
+        (cons
+          (cons
+            (cons (quote 0) (quote 0))
+            (cons (quote 0) (cons (quote 0) (quote 0))))
+          (cons (cons (quote 0) (quote 0)) (quote 0)))))))

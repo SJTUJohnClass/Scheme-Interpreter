@@ -1,1 +1,1 @@
-(fixnum? 7)
+(if (void) 7 8)

@@ -1,1 +1,1 @@
-(letrec () (begin (fixnum? 7) 10))
+(null? (quote ()))
