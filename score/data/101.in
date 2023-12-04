@@ -1,0 +1,8 @@
+(and (+ ((if (not (cons (quote 1) (quote (2))))
+             (quote #t)
+             (letrec ([f.1 (quote 3)]
+                      [f.2 (lambda (x.3) (+ x.3 (quote 4)))])
+               f.2))
+          (quote 5))
+        (quote 6))
+     (quote #f))

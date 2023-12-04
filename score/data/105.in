@@ -1,0 +1,9 @@
+(let ([a 1])
+  (letrec ([add1 (lambda (b) (+ b 1))]
+           [sub1 (lambda (b) (- b 1))])
+    (let ([c (lambda (a)
+               (if (or (not (= a 1)) (and (> a 1) (< a 4)))
+                   (add1 a)
+                   (sub1 a)))])
+      (let ([d (c a)] [e (c (add1 a))] [f (c (sub1 a))])
+        (cons d (cons e (cons f (quote ()))))))))

@@ -1,0 +1,4 @@
+(let ([a 5] [b 4])
+  (letrec ([c (lambda (d e) (* d e))]
+           [f (lambda (g h) (cons g h))])
+    (if (or (> (c a b) 15) (= (c a b) 20)) (f a b))))

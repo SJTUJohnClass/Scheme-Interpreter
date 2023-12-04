@@ -1,0 +1,4 @@
+1c1
+< Undefined symbol: fixnum?
+---
+> 35

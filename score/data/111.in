@@ -1,0 +1,1 @@
+(letrec ([f (lambda () (quote (1 . 2)))]) (eq? (f) (f)))
