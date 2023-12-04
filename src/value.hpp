@@ -110,5 +110,6 @@ std::ostream &operator<<(std::ostream &, Value &);
 
 Assoc empty();
 Assoc extend(const std :: string&, const Value &, Assoc &);
+void modify(const std :: string&, const Value &, Assoc &);
 Value find(const std::string &, Assoc &);
 #endif

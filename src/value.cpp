@@ -17,6 +17,16 @@ Assoc extend(const std::string &x, const Value &v, Assoc &lst)
     return Assoc(new AssocList(x, v, lst));
 }
 
+void modify(const std::string &x, const Value &v, Assoc &lst)
+{
+    for (auto i = lst; i.get() != nullptr; i = i -> next)
+        if (x == i -> x)
+        {
+            i -> v = v;
+            return;
+        }
+}
+
 Value find(const std::string &x, Assoc &l) {
   for (auto i = l; i.get() != nullptr; i = i -> next)
     if (x == i -> x)
@@ -62,6 +72,7 @@ void Null::showCdr(std::ostream &os) {
 }
 
 void Terminate::show(std::ostream &os) {
+  os << "()";
 }
 
 void Pair::show(std::ostream &os) {
