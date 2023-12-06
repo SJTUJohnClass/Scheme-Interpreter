@@ -1,12 +1,6 @@
-(letrec ((num-list? (lambda (ls)
-                      (if (null? ls)
-                          #t
-                          (if (fixnum? (car ls))
-                              (num-list? (cdr ls))
-                              #f))))
-         (list-product (lambda (ls)
-                         (if (null? ls)
-                             1
-                             (* (car ls) (list-product (cdr ls)))))))
-  (let ((ls (quote (1 2 3 4 5))))
-    (if (num-list? ls) (list-product ls) #f)))
+(let ((a 5) (b 4))
+  (letrec ((c (lambda (d e) (* d e)))
+           (f (lambda (g h) (cons g h))))
+    (if (let ((t.8 (> (c a b) 15))) (if t.8 t.8 (= (c a b) 20)))
+        (f a b)
+        (void))))

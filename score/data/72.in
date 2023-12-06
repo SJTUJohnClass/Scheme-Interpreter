@@ -1,1 +1,1 @@
-(begin (>= 7 8) 7)
+(letrec () (begin (fixnum? 7) 10))

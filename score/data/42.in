@@ -1,1 +1,1 @@
-(let ((x 5)) (* 3 x) x)
+(let ((x (cons 1 5))) (begin (cdr x) x))

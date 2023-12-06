@@ -1,1 +1,2 @@
-(letrec () (>= 7 8))
+(let ((x (cons 1 (quote ()))) (y (cons 1 (quote ()))))
+  (eq? x y))

@@ -1,9 +1,7 @@
-(let ((x 7) (y 4))
-  (let ((t.6 (if (fixnum? x)
-                 (if (= x 4) (if (fixnum? y) (= y 7) #f) #f)
-                 #f)))
-    (if t.6
-        t.6
-        (if (fixnum? x)
-            (if (= x 7) (if (fixnum? y) (= y 4) #f) #f)
-            #f))))
+(letrec ((fib (lambda (n k)
+                (if (let ((t.7 (= n 0))) (if t.7 t.7 (= n 1)))
+                    (k 1)
+                    (fib (- n 1)
+                         (lambda (w)
+                           (fib (- n 2) (lambda (v) (k (+ w v))))))))))
+  (fib 10 (lambda (x) x)))

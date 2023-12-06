@@ -1,1 +1,1 @@
-(let () (boolean? #f))
+(null? (quote ()))

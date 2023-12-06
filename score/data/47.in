@@ -1,1 +1,1 @@
-(let ((x 1) (y 5)) (cons x y) x)
+(if (- 3 5) (quote 7) 8)

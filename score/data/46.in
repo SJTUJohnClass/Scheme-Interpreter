@@ -1,1 +1,1 @@
-(let ((x (cons 1 5))) (cdr x) x)
+(if (if (* 3 5) #f #t) (quote 7) 8)

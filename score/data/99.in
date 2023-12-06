@@ -1,7 +1,9 @@
-(letrec ((ack (lambda (m n)
-                (if (= m 0)
-                    (+ n 1)
-                    (if (if (> m 0) (= n 0) #f)
-                        (ack (- m 1) 1)
-                        (ack (- m 1) (ack m (- n 1))))))))
-  (ack 2 4))
+(let ((x 7) (y 4))
+  (let ((t.6 (if (fixnum? x)
+                 (if (= x 4) (if (fixnum? y) (= y 7) #f) #f)
+                 #f)))
+    (if t.6
+        t.6
+        (if (fixnum? x)
+            (if (= x 7) (if (fixnum? y) (= y 4) #f) #f)
+            #f))))

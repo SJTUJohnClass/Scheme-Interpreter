@@ -1,1 +1,3 @@
-(letrec () (= 7 8) 7)
+(letrec ()
+  (let ((x (cons 1 (quote ()))) (y (cons 1 (quote ()))))
+    (begin (eq? x y) 10)))

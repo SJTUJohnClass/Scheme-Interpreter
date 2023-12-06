@@ -1,3 +1,1 @@
-(letrec ()
-  (let ((x (cons 1 (quote ()))) (y (cons 1 (quote ()))))
-    (begin (eq? x y) 10)))
+(let ((x (quote (1 2)))) (eq? x x))

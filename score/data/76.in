@@ -1,1 +1,1 @@
-(letrec () (begin (fixnum? 7) 10))
+(let ((x (quote (1 2))) (y (quote (1 2)))) (eq? x y))

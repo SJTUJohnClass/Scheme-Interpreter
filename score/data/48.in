@@ -1,1 +1,1 @@
-(begin (void) 5)
+(if (cons 3 5) 7 8)

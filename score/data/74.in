@@ -1,1 +1,1 @@
-(letrec () (boolean? #f) 9)
+(letrec () (begin (pair? (cons 1 (quote ()))) 20))

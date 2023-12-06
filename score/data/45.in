@@ -1,1 +1,1 @@
-(let ((x (cons 1 5))) (car x) x)
+(if (+ 3 5) (quote 7) 8)

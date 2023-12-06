@@ -1,1 +1,1 @@
-(fixnum? 7)
+(if #t (if #t (if 10 100 #f) #f) #f)

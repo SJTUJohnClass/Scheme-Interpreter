@@ -1,1 +1,1 @@
-(null? (quote ()))
+(letrec () (begin (< 7 8) 7))

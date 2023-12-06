@@ -1,1 +1,1 @@
-(null? (quote ()))
+(procedure? (lambda (x) x))

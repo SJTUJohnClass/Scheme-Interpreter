@@ -1,7 +1,14 @@
-(letrec ((fib (lambda (n k)
-                (if (let ((t.7 (= n 0))) (if t.7 t.7 (= n 1)))
-                    (k 1)
-                    (fib (- n 1)
-                         (lambda (w)
-                           (fib (- n 2) (lambda (v) (k (+ w v))))))))))
-  (fib 10 (lambda (x) x)))
+(letrec ((curry-list (lambda (x)
+                       (lambda (y)
+                         (lambda (z)
+                           (lambda (w)
+                             (cons
+                               x
+                               (cons y (cons z (cons w (quote ()))))))))))
+         (append (lambda (ls1 ls2)
+                   (if (null? ls1)
+                       ls2
+                       (cons (car ls1) (append (cdr ls1) ls2))))))
+  (append
+    ((((curry-list 1) 2) 3) 4)
+    ((((curry-list 5) 6) 7) 8)))
