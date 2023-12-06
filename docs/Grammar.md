@@ -71,15 +71,11 @@ scm> 100
 
 `var` 可以被解释为任何值， 当 `var` 在当前作用域下未定义时你需要报错。
 
-在这里， 如果 `var` 是一个 `primitive`， 你应当输出 `#<procedure var_name>`， 具体可见下方例子理解。
-
 ```
 scm> (void)
 #<void>
 scm> void
-#<procedure void>
-scm> car
-#<procedure car>
+RuntimeError // 此处报错
 scm> (let ([x 1]) x)
 1
 scm> (let ([x (lambda (y) y)]) x)
@@ -111,7 +107,7 @@ scm> (quote #t)
 scm> (if (= 1 0) void (cons 1 2))
 (1 . 2)
 scm> (if #t void (cons 1 2))
-#<procedure void>
+RuntimeError // 报错, void 未定义
 ```
 需要注意的是， Scheme 中除了 `#f`（对应的值为 `Boolean(false)`）之外的其他值都为真值。
 
