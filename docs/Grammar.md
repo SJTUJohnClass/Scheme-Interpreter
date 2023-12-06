@@ -95,7 +95,7 @@ scm> (quote haha)
 haha
 scm> (quote (1 2 3))
 (1 2 3)
-scm> (quote '#t)
+scm> (quote #t)
 #t // 此处的 #t 是 Boolean 而非 Symbol
 ```
 
@@ -108,7 +108,7 @@ scm> (quote '#t)
 ```
 scm> (if (= 1 0) void (cons 1 2))
 (1 . 2)
-scm> (if #f void (cons 1 2))
+scm> (if #t void (cons 1 2))
 #<procedure void>
 ```
 需要注意的是， Scheme 中除了 `#f`（对应的值为 `Boolean(false)`）之外的其他值都为真值。
