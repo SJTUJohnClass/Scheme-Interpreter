@@ -71,6 +71,8 @@ scm> 100
 
 `var` 可以被解释为任何值， 当 `var` 在当前作用域下未定义时你需要报错。
 
+在这里， 如果 `var` 是一个 `primitive`， 你应当输出 `#<procedure var_name>`， 具体可见下方例子理解。
+
 ```
 scm> (void)
 #<void>
