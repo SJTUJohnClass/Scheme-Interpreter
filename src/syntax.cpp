@@ -105,7 +105,7 @@ Syntax readSyntax(std::istream &is) {
   return readItem(readSpace(is));
 }
 
-std::istream &operator>>(std::istream &is, Syntax stx) {
+std::istream &operator>>(std::istream &is, Syntax &stx) {
   stx = readSyntax(is);
   return is;
 }
