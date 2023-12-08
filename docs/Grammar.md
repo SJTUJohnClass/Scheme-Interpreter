@@ -88,11 +88,11 @@ scm> (let ([x (lambda (y) y)]) x)
 
 ```
 scm> (quote 1)
-1
+1 // Integer
 scm> (quote haha)
-haha
+haha // Symbol
 scm> (quote (1 2 3))
-(1 2 3)
+(1 2 3) // Pair
 scm> (quote #t)
 #t // 此处的 #t 是 Boolean 而非 Symbol
 ```
