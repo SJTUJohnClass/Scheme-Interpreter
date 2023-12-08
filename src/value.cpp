@@ -58,9 +58,7 @@ void Boolean::show(std::ostream &os) {
 }
 
 void Symbol::show(std::ostream &os) {
-    if (v_type == V_PRIMITIVE)
-        os << "#<procedure " + s + ">";
-    else os << s;
+    os << s;
 }
 
 void Null::show(std::ostream &os) {
