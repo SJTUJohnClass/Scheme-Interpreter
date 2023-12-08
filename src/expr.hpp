@@ -43,7 +43,7 @@ struct Apply : ExprBase {
     std::vector<Expr> rand;
     Apply(const Expr &, const std :: vector<Expr> &);
     virtual Value eval(Assoc &) override;
-};
+}; // this is used to handle function calling, where rator is the operator and rands are operands
 
 struct Letrec : ExprBase {
   std::vector<std::pair<std::string, Expr>> bind;
