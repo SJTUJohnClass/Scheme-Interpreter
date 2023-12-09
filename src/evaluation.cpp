@@ -64,6 +64,8 @@ Value IsBoolean::evalRator(const Value &rand) {} // boolean?
 
 Value IsFixnum::evalRator(const Value &rand) {} // fixnum?
 
+Value IsSymbol::evalRator(const Value &rand) {} // symbol?
+
 Value IsNull::evalRator(const Value &rand) {} // null?
 
 Value IsPair::evalRator(const Value &rand) {} // pair?

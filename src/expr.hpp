@@ -179,6 +179,11 @@ struct IsFixnum : Unary {
     virtual Value evalRator(const Value &) override;
 };
 
+struct IsSymbol : Unary {
+    IsSymbol(const Expr &);
+    virtual Value evalRator(const Value &) override;
+};
+
 struct IsNull : Unary {
     IsNull(const Expr &);
     virtual Value evalRator(const Value &) override;

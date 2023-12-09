@@ -67,6 +67,8 @@ IsBoolean :: IsBoolean(const Expr &r1) : Unary(E_BOOLQ, r1) {}
 
 IsFixnum :: IsFixnum(const Expr &r1) : Unary(E_INTQ, r1) {}
 
+IsSymbol :: IsSymbol(const Expr &r1) : Unary(E_SYMBOLQ, r1) {}
+
 IsNull :: IsNull(const Expr &r1) : Unary(E_NULLQ, r1) {}
 
 IsPair :: IsPair(const Expr &r1) : Unary(E_PAIRQ, r1) {}
