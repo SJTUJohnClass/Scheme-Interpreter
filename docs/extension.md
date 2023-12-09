@@ -20,3 +20,5 @@ typedef std::atomic<int> count_type;
 ```
 
 然后把 `shared.hpp` 中用到的跟 `ref_count` 有关的 `int` 全部改为 `count_type`。
+
+开启多线程优化的全局编译控制符为 PARALLEL_OPTIMIZE。
