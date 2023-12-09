@@ -1,4 +1,2 @@
-1c1
-< Undefined symbol: fixnum?
----
-> 35
+0a1
+> 3628800
