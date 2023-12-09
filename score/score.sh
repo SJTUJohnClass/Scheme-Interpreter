@@ -18,7 +18,7 @@ EOF
     mv scm_cleaned.out scm.out
     sed 's/scm> //' scm.out > scm_cleaned.out
     mv scm_cleaned.out scm.out
-    diff scm.out ./data/$i.out > diff_output.txt
+    diff -b scm.out ./data/$i.out > diff_output.txt
     if [ $? -ne 0 ]; then
         echo "Wrong answer in TEST" $i
         # echo "---------------------------"
@@ -44,7 +44,7 @@ EOF
     mv scm_cleaned.out scm.out
     sed 's/scm> //' scm.out > scm_cleaned.out
     mv scm_cleaned.out scm.out
-    diff scm.out ./more-tests/$i.out > diff_output.txt
+    diff -b scm.out ./more-tests/$i.out > diff_output.txt
     if [ $? -ne 0 ]; then
         echo "Wrong answer in EXTRA TEST" $i
         # echo "---------------------------"
