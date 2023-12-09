@@ -12,7 +12,7 @@
 首先， 在你的 `shared.hpp` 前加上
 
 ```
-#ifndef PARALLEL OPTIMIZE
+#ifndef PARALLEL_OPTIMIZE
 typedef int count_type;
 #else
 typedef std::atomic<int> count_type;
