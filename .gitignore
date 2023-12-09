@@ -1,5 +1,6 @@
 build
 myscheme
 
-./score/*.txt
-./score/*.out
+score/*.txt
+
+score/*.out
