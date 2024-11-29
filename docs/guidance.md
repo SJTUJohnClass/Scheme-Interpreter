@@ -235,7 +235,7 @@ scm> (exit) // 程序终止
 expr   -->  Integer
 		| 	Boolean
 		|	(quote datum)
-        |   (primitive expr*)
+		|   (primitive expr*)
 ```
 
 `primitive` 在原来的基础上增加了 `void, cons, car, cdr`。
@@ -297,11 +297,30 @@ scm> #f
 
 注意，此处 `datum` 是一个 `syntax` 而非 `expr`。
 
-当 `datum` 的类型为 `Integer` 或 `Boolean` 时，该表达式的值即为 `datum` 对应的表达式的值。
+`(quote datum)` 的作用是将 `datum` 原样返回。
 
-当 `datum` 的类型为 `List` （即由一对 `()` 包裹的 `syntax`，中间各个元素由空格隔开）时，假设 `datum` 为 `(datum1 datum2 ... datumn)`，该表达式的值为列表 `((quote datum1) (quote datum2) ... (quote datumn))`。
+`Integer` 与 `Boolean` 的情况很好理解。
 
-否则，`(quote datum)` 的值为 `Symbol` 类型，对应的字符串为 `datum`。
+对于 `Pair` 的情况，由于 Scheme 对一个列表求值时会将其视为调用函数（例如 `(+ 1 2)` 的值是 `3` 而非列表 `(+ 1 2)` 自身），所以我们可以通过 `(quote datum)` 直接构造一个 `Pair`（包括列表）。
+
+对于 `Symbol` 的情况，由于 Scheme 对一个 `Identifier` 求值时会被认为取变量名为该 `Identifier` 对应的值（例如 `var` 的值是 `var` 变量对应的值而非 `var` 自身），所以我们可以通过 `(quote datum)` 直接构造一个 `Symbol`。
+
+`(quote datum)` 的值是 `Integer`、`Boolean`、`Symbol`、`Pair` 中的一种，取决于 `datum` 的形式。
+
+样例：
+
+```
+scm> (quote 1)
+1 //注意这里是 Integer 类型
+scm> (quote #t)
+#t // 注意这里是 Boolean 类型
+scm> (quote (+ 1 2 3))
+(+ 1 2 3) // 注意这里是 Pair 类型，其中 + 为 Symbol 类型，其它为 Integer 类型
+scm> (quote (4 . 5))
+(4 . 5) // 注意这里是 Pair 类型，左值为 4，右值为 5，都为 Integer 类型
+scm> (quote scheme)
+scheme // 注意这里是 Symbol 类型
+```
 
 ##### 语法：`(primitive expr*)`
 
@@ -323,4 +342,148 @@ scm> #f
 `(cons expr1 expr2)` 表示构造一个 `Pair`，其左值为 `expr1` 的值，右值 `expr2` 的值。它接受两个任意类型的参数，返回对应的 `Pair`。
 
 `(car expr)` 与 `(cdr expr)` 分别表示取一个 `Pair` 的左值和右值。它接受一个类型为 `Pair` 的参数，返回对应的结果。
+
+样例：
+
+```
+scm> (void)
+#<void>
+scm> (cons 1 2)
+(1 . 2)
+scm> (car (cons 5 #f))
+5
+scm> (cdr (cons #t (void)))
+#<void>
+scm> (cdr (quote ((ll . lr) . (rl . rr))))
+(rl . rr)
+scm> (car (quote (+ - *)))
++
+```
+
+#### 子任务 3（15pts）：顺序结构、选择结构
+
+在该子任务中，我们在前两个子任务的基础上引入了顺序结构与条件结构，为了更好地使用条件结构，我们还引入了一些 `primitive` 来对数据类型做比较或检查。该子任务中，你的解释器应当接受以下语法：
+
+```
+expr   -->  Integer
+		|	Boolean
+		|	(begin expr expr*)
+		|	(if expr1 expr2 expr3)
+		|	(quote datum)
+		|   (primitive expr*)
+```
+
+##### 语法：`(begin expr expr*)`
+
+顺序结构。
+
+`expr*` 表示可能 $0, 1, 2, \cdots$ 个 `expr`。
+
+你需要从左至右依次执行 `expr`，而 `(begin expr expr*)` 的值为最右侧的 `expr` 的值。
+
+由于本次大作业并不涉及含副作用的表达式，所以无法体现这一语法的作用。但是你仍然需要执行每个 `expr`，因为这些 `expr` 内可能包含非法情况。
+
+样例：
+
+```
+scm> (begin 1)
+1
+scm> (begin (void) (cons 1 2) #t)
+#t
+```
+
+#### 语法：`(if expr1 expr2 expr3)`
+
+选择结构。
+
+我们首先执行并求出 `expr1` 的值，若 `expr1` 的值为 `#f`，则执行 `expr3` ，该表达式的值为 `expr3` 的值；否则执行 `expr2`，该表达式的值为 `expr2` 的值。
+
+**注意：与 C++ 不同的是，`0` 会被视为 `#t` 而非 `#f`。**
+
+样例：
+
+```
+scm> (if 0 1 2)
+1
+scm> (if (< 2 1) #f #t) // (< 1 2) 的值见下一部分的内容
+#t
+scm> (if (void) undefined 1)
+Error. // 报错，undefined 变量未定义
+scm> (if #f undefined 1)
+1
+```
+
+#### 语法：`(primitive expr*)`
+
+该子任务中，`primitive` 语法包含以下几种情况：
+
+```
+-->	(+ expr1 expr2)
+ |	(- expr1 expr2)
+ |	(* expr1 expr2)
+ |	(exit)
+ |	(void)
+ |	(cons expr1 expr2)
+ | 	(car expr)
+ |	(cdr expr)
+ |	(< expr1 expr2)
+ |	(<= expr1 expr2)
+ |	(= expr1 expr2)
+ |	(>= expr1 expr2)
+ |	(> expr1 expr2)
+ |	(not expr)
+ |	(fixnum? expr)
+ |	(boolean? expr)
+ |	(null? expr)
+ |	(pair? expr)
+ |	(symbol? expr)
+ |	(eq? expr1 expr2)
+```
+
+`(< expr1 expr2)`、`(<= expr1 expr2)`、`(= expr1 expr2)`、`(>= expr1 expr2)`、`(> expr1 expr2)` 表示对应的整数比较。它们接受两个类型为 `Integer` 的参数，值为对应的比较结果，类型为 `Boolean`。
+
+`(not expr)` 表示取反操作。它接受一个任意类型的参数，值为对应的取反结果，类型为 `Boolean`。当 `expr` 的值为 `#f` 时，该表达式的值为 `#t`，否则为 `#f`。请注意，它与 `(if expr1 expr2 expr3)` 一样，将 `0` 视为 `#t`。
+
+`(fixnum? expr)`、`(boolean? expr)`、`(null? expr)`、`(pair? expr)`、`(symbol? expr)` 分别表示 `expr` 的值的类型是否为 `Integer`、`Boolean`、`Null`、`Pair`、`Symbol`。它们接受一个任意类型的参数，值为对应的结果，类型为 `Boolean`。
+
+`(eq? expr1 expr2)` 表示检查 `expr1` 与 `expr2` 的值是否相等。该表达式接受两个任意类型的参数，值为对应的结果，类型为 `Boolean`。具体的比较规则：
+
+- 若两个参数的类型都为 `Integer`，则比较对应的整数是否相同
+- 若两个参数的类型都为 `Boolean`，则比较对应的布尔值是否相同
+- 若两个参数的类型都为 `Symbol`，则比较对应的字符串是否相同
+- 若两个参数的类型都为 `Null` 或都为 `Void`，则值为 `#t`
+- 否则，比较两个值指向的内存位置是否相同（例如两个 `Pair`，即使它们左右值都相等，但如果内存位置不同，我们也认为两者不同）
+
+我们提供的接口中存的是指向值的指针而非值本身， 你可以通过定义 `Value v` 并使用 `v.get()` 来查看 `v` 指向的内存位置。
+
+样例：
+
+```
+scm> (< 1 2)
+#t
+scm> (>= 1 2)
+#f
+scm> (= #t 1)
+Error. // expr1 的类型不匹配
+scm> (not #f)
+#t
+scm> (not (void))
+#f
+scm> (pair? (car (cons 1 2)))
+#f
+scm> (symbol? (quote var))
+#t
+scm> (fixnum? (+ 5 1))
+#t
+scm> (null? (quote ()))
+#t
+scm> (eq? 3 (+ 1 2))
+#t
+scm> (eq? #t (= 0 0))
+#t
+scm> (eq? (quote ()) (quote ()))
+#t
+scm> (eq? (quote (1 2 3)) (quote 1 2 3))
+#f
+```
 
