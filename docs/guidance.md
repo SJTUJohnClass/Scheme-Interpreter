@@ -14,7 +14,7 @@
 
 Scheme 是一种函数式语言，它主要有两种特性：
 
-- 采用 S-表达式表示语句，除了 `int` 类型与变量 `var`，其余语法形如 `(expr exprs ...)`，例如 `(+ 1 3)`
+- 采用 S-表达式，除了 `int` 类型与变量 `var`，其余语法形如 `(expr exprs ...)`，例如 `(+ 1 3)`
 - 函数也被视作一个变量
 
 如果你对 Scheme 感兴趣，可以在网上自行查阅相关信息。本次大作业并不需要你实现 Scheme 所有的功能，因此阅读文档即可完成所有的需求。
@@ -177,11 +177,11 @@ expr   -->  Integer
 我们从实现一个简易的计算器开始，在该子任务中，你的解释器应当可以接受以下语法：
 
 ```
-expr   -->  constant
+expr   -->  Integer
         |   (primitive expr*)
 ```
 
-##### 语法：`constant`
+##### 语法：`Integer`
 
 在该子任务中，`constant` 表示整数，对应类型为 `Integer` 的值。在本次大作业中，你可以认为 `Integer` 就是 C++ 中的 `int`，你不需要考虑溢出等情况。
 
@@ -194,13 +194,22 @@ scm> -1
 -1
 ```
 
-
-
 ##### 语法：`(primitive expr*)`
 
-`primitive` 仅包含 `+,-,*,exit`，其中 `+,-,*` 表示基本的整数算术运算，接收两个类型为 `Integer` 的参数，并返回类型为 `Interger` 的值。
+该子任务中，`primitive` 语法包含以下几种情况：
 
-`exit` 没有参数，它会返回类型为 `Terminate` 的值，当 `main.cpp` 读入当前 `syntax` 并经过 `parse` 与 `evaluate` 后得到的 `value` 类型为 `Terminate` 时，`main.cpp` 会停止运行。
+```
+-->	(+ expr1 expr2)
+ |	(- expr1 expr2)
+ |	(* expr1 expr2)
+ |	(exit)
+```
+
+`(+ expr1 expr2)`、`(- expr1 expr2)`、`(* expr1 expr2)` 表示对应的整数运算，它们接收两个类型为 `Integer` 的参数，值为对应的运算结果，类型为 `Integer`。
+
+`(exit)` 没有参数，它的值类型为 `Terminate`，当 `main.cpp` 读入当前 `syntax` 并经过 `parse` 与 `evaluate` 后得到的 `value` 类型为 `Terminate` 时，解释器会停止运行。
+
+具体实现中，我们首先求出 `expr*` 的值，然后计算 `(primitive exor*)` 的值。
 
 特别地，当 `primitive` 接收的参数个数或参数类型不符合要求时，你应当及时抛出异常（详见 `RE.hpp` 与 `main.cpp`）。**本次大作业不要求你抛出的异常指明具体的问题，你只需要抛出 `RuntimeError("Error.")` 即可。**
 
@@ -218,10 +227,6 @@ Error.
 scm> (exit) // 程序终止
 ```
 
-`exit` 没有参数，它会返回类型为 `Terminate` 的值，当 `main.cpp` 读入当前 `syntax` 并经过 `parse` 与 `evaluate` 后得到的 `value` 类型为 `Terminate` 时，`main.cpp` 会停止运行。
-
-特别地，当 `primitive` 接收的参数个数或参数类型不符合要求时，你应当及时抛出异常（详见 `RE.hpp` 与 `main.cpp`）。本次大作业不要求你抛出的异常指明具体的问题，你只需要抛出 `RuntimeError("Error.")` 即可。
-
 #### 子任务 2（10pts）：更多的数据类型
 
 在该子任务中，我们将在上一子任务的基础上引入更多的数据类型以及对应的构造方式，你的解释器现在应当可以接受以下语法：
@@ -229,10 +234,11 @@ scm> (exit) // 程序终止
 ```
 expr   -->  Integer
 		| 	Boolean
+		|	(quote datum)
         |   (primitive expr*)
 ```
 
-`primitive` 在原来的基础上增加了 `quote, void, cons, car, cdr, not`。
+`primitive` 在原来的基础上增加了 `void, cons, car, cdr`。
 
 我们首先来介绍该子任务中涉及到的数据类型。
 
@@ -248,8 +254,73 @@ expr   -->  Integer
 
 `Pair` 即二元有序对，它有两个值组成。在 Scheme 中，我们使用 `(A . B)` 表示一个左值为 `A`，右值为 `B` 的 `Pair`。
 
-组成 `Pair` 的两个值的类型可以是任意类型，甚至也可以是 `Pair`，例如 `((1 . 2) . (3 . 4))`，它表示一个左值为 `(1 . 2)`，右值为 `(3 . 4)` 的 `Pair`。通过这种嵌套，我们可以用 `Pair` 表示一棵二叉树，进而表示更多、更复杂的结构。例如，我们可以使用 `Pair` 表示一个列表 `[1, 2, 3, 4, 5]`：`(1 . (2 . (3 . (4 . 5))))`，Scheme 会将其简写为 `(1 2 3 4 . 5)`。
+组成 `Pair` 的两个值的类型可以是任意类型，甚至也可以是 `Pair`，例如 `((1 . 2) . (3 . 4))`，它表示一个左值为 `(1 . 2)`，右值为 `(3 . 4)` 的 `Pair`。通过这种嵌套，我们可以用 `Pair` 表示一棵二叉树，进而表示更多、更复杂的结构。例如，我们可以使用 `Pair` 表示这么一个结构 `[1, 2, 3, 4, 5]`：`(1 . (2 . (3 . (4 . 5))))`，Scheme 会将其简写为 `(1 2 3 4 . 5)`。
 
 ##### 数据类型：`Null`
 
 `Null` 可以被理解为空 `Pair`。在 Scheme 中，我们使用 `()` 表示 `Null`。
+
+结合 `Null` 与 `Pair`，我们可以在 Scheme 中表示 `List`。例如上面的例子，我们实际上会用 `(1 . (2 . (3 . (4 . (5 . ())))))` 来表示一个列表 `[1, 2, 3, 4, 5]`，Scheme 会将其简写为 `(1 2 3 4 5)`，这样我们就规避了 `.` 的出现。
+
+##### 数据类型：`Symbol`
+
+`Symbol` 可以被视为不可变的字符串。在 Scheme 中，我们使用 `quote` 来生成 `Symbol`，具体内容请见下方语法部分的解释。
+
+我们可以使用 `Symbol`  起到类似 C++ 中 `enum` 类型的作用。例如，我们可以创建一个列表 `(left right up down)` 来表示四个方向，其中 `left`、`right`、`up`、`down` 都是类型为 `Symbol` 的值，它们的值即为自身。
+
+`Symbol` 类型甚至使得我们可以用 Scheme 编写一个 Scheme 解释器，因为我们可以用 `Symbol` 类型表示一个个 token，且 Scheme 本身采用 S-表达式，这使得 Scheme 的表达式本身也是一个列表。
+
+##### 数据类型：`Void`
+
+`Void` 是一个很特殊的数据类型，当一个函数仅包含副作用时，它的值即为 `Void`。由于本次大作业中几乎表达式都没有副作用，因此 `Void` 只能由 `(void)` 这一表达式生成。Scheme 中用 `#<void>` 表示 `Void` 类型。
+
+##### 数据类型：`Closure`
+
+`Closure` 用来表示用户自定义的函数。本次大作业中 `Closure` 表示函数本身以及对应的作用域。该子任务中不涉及 `Closure` 的相关操作。
+
+现在我们逐个介绍该子任务中新增的语法。
+
+##### 语法：`Boolean`
+
+当表达式为 `#t` 或 `#f` 时，它的值即为 `#t` 与 `#f`（`Boolean` 类型）。
+
+样例：
+
+```
+scm> #t
+#t
+scm> #f
+#f
+```
+
+##### 语法：`(quote datum)`
+
+注意，此处 `datum` 是一个 `syntax` 而非 `expr`。
+
+当 `datum` 的类型为 `Integer` 或 `Boolean` 时，该表达式的值即为 `datum` 对应的表达式的值。
+
+当 `datum` 的类型为 `List` （即由一对 `()` 包裹的 `syntax`，中间各个元素由空格隔开）时，假设 `datum` 为 `(datum1 datum2 ... datumn)`，该表达式的值为列表 `((quote datum1) (quote datum2) ... (quote datumn))`。
+
+否则，`(quote datum)` 的值为 `Symbol` 类型，对应的字符串为 `datum`。
+
+##### 语法：`(primitive expr*)`
+
+该子任务中，`primitive` 语法包含以下几种情况：
+
+```
+-->	(+ expr1 expr2)
+ |	(- expr1 expr2)
+ |	(* expr1 expr2)
+ |	(exit)
+ |	(void)
+ |	(cons expr1 expr2)
+ | 	(car expr)
+ |	(cdr expr)
+```
+
+`(void)` 不接受任何参数，值为 `Void`。
+
+`(cons expr1 expr2)` 表示构造一个 `Pair`，其左值为 `expr1` 的值，右值 `expr2` 的值。它接受两个任意类型的参数，返回对应的 `Pair`。
+
+`(car expr)` 与 `(cdr expr)` 分别表示取一个 `Pair` 的左值和右值。它接受一个类型为 `Pair` 的参数，返回对应的结果。
+
