@@ -103,27 +103,16 @@ R = 112
 
 ### 分数组成
 
-- Basic Task: 75
-- Extension: 5
-- Q & A: 10
-- Coding Conventions: 10
+- Basic Task: 90
+- Code Review: 10
+- Coding Conventions: 5
 
-Basic Task 最后我们会统一评测你交上来的文件。
+其中，Basic Task 的分数以 OJ 上的评测结果为准。若你最后的总得分超过 100，多余的分数将作为 bonus 加入你的大作业得分。
 
 ## 帮助
 
 具体要实现的语法可在[Grammar](docs/Grammar.md)查看。
 
-对于 解释器的介绍和对 `src` 中文件的说明可在[Intro](docs/Intro.md)查看。
+对于解释器的介绍和对 `src` 中文件的说明可在[Intro](docs/Intro.md)查看。
 
 如果你想获取一些实现上的帮助， 可以参考[Implement](docs/Implement.md)。
-
-## 更新记录
-
-### Update in 2023.12.9
-
-大家好， 我们对大作业的内容进行了一些更新， 具体包括
-- 增加了 primitive 中 `symbol?` 语法的处理（要求见 `docs/Grammar.md`， 具体修改见 `src/Def.cpp, src/Def.hpp, src/expr.hpp, src/expr.cpp, src/evaluation.cpp`）
-- 更新了 `eq?` 操作对 `Symbol` 的比较规则（见 `docs/Grammar.md`）
-- 增加了新的测试点并对测试脚本进行了修改（见 `score/more-tests, score/score.sh`）
-- 增加了对 extension 的说明（见 `docs/extension.md`）
