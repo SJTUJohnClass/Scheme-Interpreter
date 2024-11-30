@@ -209,9 +209,9 @@ scm> -1
 
 `(exit)` 没有参数，它的值类型为 `Terminate`，当 `main.cpp` 读入当前 `syntax` 并经过 `parse` 与 `evaluate` 后得到的 `value` 类型为 `Terminate` 时，解释器会停止运行。
 
-具体实现中，我们首先求出 `expr*` 的值，然后计算 `(primitive exor*)` 的值。
+提示：在前三个子任务中，你只需要考虑 `primitive` 在 `(primitive expr*)` 中出现的情况。因此，你可以直接将 `syntax` parse 为对应的 `expr`（如 `/src/expr.hpp` 中的 `Plus` 等），然后进行相应的处理。
 
-特别地，当 `primitive` 接收的参数个数或参数类型不符合要求时，你应当及时抛出异常（详见 `RE.hpp` 与 `main.cpp`）。**本次大作业不要求你抛出的异常指明具体的问题，你只需要抛出 `RuntimeError("Error.")` 即可。**
+特别地，当 `primitive` 接收的参数个数或参数类型不符合要求时，你应当及时抛出异常（详见 `RE.hpp` 与 `main.cpp`）。**本次大作业不要求你抛出的异常指明具体的问题，你只需要抛出 `RuntimeError(str)` 即可，`str` 可以是任意字符串。**
 
 样例：
 
@@ -223,7 +223,7 @@ scm> (- 1 2)
 scm> (* (+ 1 2) (- 1 2))
 -3
 scm> (+ 1 2 3)
-Error.
+RuntimeError
 scm> (exit) // 程序终止
 ```
 
@@ -272,11 +272,11 @@ expr   -->  Integer
 
 ##### 数据类型：`Void`
 
-`Void` 是一个很特殊的数据类型，当一个函数仅包含副作用时，它的值即为 `Void`。由于本次大作业中几乎表达式都没有副作用，因此 `Void` 只能由 `(void)` 这一表达式生成。Scheme 中用 `#<void>` 表示 `Void` 类型。
+`Void` 是一个很特殊的数据类型，当一个函数仅包含副作用时，它的值即为 `Void`。由于本次大作业中几乎表达式都没有副作用，因此 `Void` 只能由 `(void)` 这一表达式生成。Scheme 输出表达式的值时用 `#<void>` 表示 `Void` 类型。
 
 ##### 数据类型：`Closure`
 
-`Closure` 用来表示用户自定义的函数。本次大作业中 `Closure` 表示函数本身以及对应的作用域。该子任务中不涉及 `Closure` 的相关操作。
+`Closure` 用来表示用户自定义的函数。本次大作业中 `Closure` 表示函数本身以及对应的作用域。该子任务中不涉及 `Closure` 的相关操作。我们的 Scheme 输出表达式的值时用 `#<procedure>` 表示 `Closure` 类型。
 
 现在我们逐个介绍该子任务中新增的语法。
 
@@ -408,7 +408,7 @@ scm> (if 0 1 2)
 scm> (if (< 2 1) #f #t) // (< 1 2) 的值见下一部分的内容
 #t
 scm> (if (void) undefined 1)
-Error. // 报错，undefined 变量未定义
+RuntimeError // 报错，undefined 变量未定义
 scm> (if #f undefined 1)
 1
 ```
@@ -464,7 +464,7 @@ scm> (< 1 2)
 scm> (>= 1 2)
 #f
 scm> (= #t 1)
-Error. // expr1 的类型不匹配
+RuntimeError // expr1 的类型不匹配
 scm> (not #f)
 #t
 scm> (not (void))
@@ -486,4 +486,185 @@ scm> (eq? (quote ()) (quote ()))
 scm> (eq? (quote (1 2 3)) (quote 1 2 3))
 #f
 ```
+
+#### 子任务 4（25pts）：变量、作用域、函数
+
+在该子任务中，我们在前面的基础上引入了作用域的概念，并在语法中引入了变量与函数。现在你的解释器应当接受以下语法：
+
+```
+expr   -->  Integer
+		|	Boolean
+		|	var
+		|	(begin expr expr*)
+		|	(if expr1 expr2 expr3)
+		|	(quote datum)
+		|	(lambda (var*) expr)
+		|	(expr expr*)
+```
+
+在介绍语法前，我们首先介绍一下作用域与闭包的概念。
+
+作用域实际上就是若干个变量与它们绑定的值的集合。具体实现中，我们用链表表示作用域，链表的元素是一个有序对，左值为变量名，右值为该变量对应的值（见 `/src/value.hpp` 中的 `AssocList` 与 `Assoc`）。当我们需要往作用域中引入新变量时，直接在链表头部插入，查询变量时从头部开始遍历。可以发现，这样我们就实现了所谓的 shadow，即重名变量的遮蔽。
+
+闭包可以被理解为函数 + 作用域。函数与其它表达式不同之处在于，当我们对函数调用求值时，它内部的作用域与当前的作用域不同。例如表达式
+
+```scheme
+(let ([x (quote inner)])
+	(let ([func (lambda () x)])
+      (let ([x (quote outer)]) (func))))
+```
+
+的值应当为 `inner` 而非 `outer`。因此，我们还要对每个函数记录定义该函数时所处的作用域。
+
+在前面的子任务中，我们将 `primitive` 视为一种语法。实际上在 Scheme 中，`primitive` 也是函数，它们是在空作用域上定义的函数，并且应当是全局作用域中的变量。现在，我们要求你的解释器也对 `primitive` 这么处理。如此一来，`(primitive expr*)` 的语法也是函数调用语法 `(expr expr*)` 的一个子集，因此我们将其从语法中删去。
+
+除此之外，该子任务中额外引入了一个 `primitive`，为 `(procedure? expr)`，用于检查一个值的类型是否为 `Closure`，其接受一个任意类型的参数，值为对应的结果，类型为 `Boolean`。
+
+##### 语法：`var`
+
+`var` 即变量，它的值可以是任意类型，取决于当前作用域中它对应的值。
+
+任何 `Identifier` 都可以被解释成 `var`，包括 `primitives` 与 `reserve_words` 中的字符串，例如 `+` 与 `quote` 也可以是变量名。
+
+注意：
+
+- 当该变量在当前作用域未定义时，你的解释器应当输出 `RuntimeError`
+- 变量名可以与 `primitives`、`reserve_words` 重合
+
+样例：
+
+```
+scm> void // void 变量在当前作用域未定义
+RuntimeError
+scm> + // + 作为 primitive，是一个函数
+#<procedure>
+scm> ((if #t + -) 1 2) // (if #t + -) 的值为 +，然后调用进行函数调用
+3
+scm> (let ([+ 1]) +) // + 在 let 中的作用域内是一个变量，它对应的值为 1
+1
+scm> (let ([x (lambda (y) y)]) x)
+#<procedure>
+```
+
+##### 语法：`(lambda (var*) expr)`
+
+`(lambda (var*) expr)` 表示定义了一个函数，它的值应为 `Closure`，`(var*)` 为其参数列表，`expr` 为其函数体。
+
+注意：
+
+- 此处我们不对 `expr` 执行与求值，因此即使 `expr` 中有不合法的情况，也不应当报错（而是在调用时报错）
+
+样例：
+
+```
+scm> (lambda (x y) (+ x y))
+#<procedure>
+scm> (lambda () (void))
+#<procedure>
+scm> (lambda (void) undefined)
+#<procedure>
+```
+
+##### 语法：`(expr expr*)`
+
+`(expr expr*)` 表示函数调用，其中 `expr` 的类型应为 `Closure`，`expr*` 的数量应与 `expr` 对应的函数参数数量相等，否则你的解释器应该输出 `RuntimeError`。若 `expr` 为 `primitive`，那么你还需要检查参数类型是否满足要求。
+
+假设 `expr` 对应的 `Clorsure` 类型为 `clos`。在求值时，我们首先在当前作用域对 `expr*` 进行求值，将其与 `expr` 中对应的形参绑定后将其加入 `clos` 的作用域中，形成一个新的作用域，然后在这个新的作用域下对 `clos` 内部的函数体进行求值。
+
+这一语法对应了 `/src/value.hpp` 中的 `Apply`。
+
+样例：
+
+```
+scm> ((lambda (x y) (* x y)) 10 11)
+110
+scm> (- 10 5)
+5
+scm> (((if #t (lambda () +) (lambda () -))) 1 2)
+3
+scm> ((lambda () undefined)) // undefined 未定义
+RuntimeError
+```
+
+#### 子任务 5（25pts）：绑定变量
+
+截至目前，我们的解释器还无法方便地引入新变量，但当我们加入 `let` 与 `letrec` 后就可以实现这一点了。在该子任务中，你的解释器应当接受以下语法：
+
+```
+expr   -->  Integer
+		|	Boolean
+		|	var
+		|	(begin expr expr*)
+		|	(if expr1 expr2 expr3)
+		|	(quote datum)
+		|	(lambda (var*) expr)
+		|	(expr expr*)
+		|	(let ([var expr]*) expr)
+		|	(letrec ([var expr]* expr)
+```
+
+简单来说，新增的两条语法都是在做两件事：首先在当前作用域的基础上创建一个新作用域，并按照某种特定规则引入变量，然后在新作用域上对 `expr` 进行求值。
+
+##### 语法：`(let ([var expr]*) expr)`
+
+我们首先在当前作用域下依次求出 `expr*` （即 `var` 后面的 `expr` 们）的值，然后在当前作用域的基础上创建一个新作用域，并将变量 `var*` 与它们对应的值引入新作用域，最后在新作用域下对 `expr` 进行求值。
+
+样例：
+
+```
+scm> (let ([x 1] [y 1]) (+ x y))
+2
+scm> (let ([x 1] [y x]) (+ x y)) // 对 y 对应的表达式求值时，作用域里不包含 x 这个变量
+RuntimeError
+scm> (let ([x 1]) (let ([y x] [x 3]) (+ x y)))
+4
+scm> (let ([x 3]) (let ([x 1] [y x]) y))
+3
+scm> (let ([+ 1]) +)
+1
+scm> (let ([+ -]) (+ 2 1))
+1
+```
+
+##### 语法：`(letrec ([var expr]*) expr)`
+
+我们尝试用 `let` 语法实现一个求阶乘的递归函数 `fact`：
+
+```scheme
+(let
+	([fact
+      	(lambda (n)
+          	(if (= n 0)
+				1
+                (* n (fact (- n 1)))))])
+	(fact 5))
+```
+
+考虑 `fact` 这一 `Closure` 内部的作用域，可以发现该作用域并不包含 `fact`，于是上述表达式会得到 `RuntimeError`。
+
+这就是 `let` 语法的不足，它不支持我们在求 `var` 的值时调用别的 `var`。
+
+我们来看 `letrec` 是如何解决这一问题的：首先在当前作用域的基础上创建一个新作用域 `env1`，将 `var*` 与 `Value(nullptr)`（表示定义了该变量，但无法使用）绑定并引入 `env1`；然后在 `env1` 下对 `expr*` 求值，并在 `env1` 的基础上创建一个新作用域 `env2`，将 `var*` 与其对应的值绑定并引入 `env2`；最后在 `env2` 下对 `expr*` 求值。
+
+你可能会好奇“定义了该变量但无法使用”跟不定义这个变量有什么区别，确实，在这种情况
+
+```scheme
+(letrec
+	([a 1]
+     [b a])
+	b)
+```
+
+下并没有用，因为变量 `a` 虽然被定义但无法使用，你的解释器仍然应该输出 `RuntimeError`。但如果 `b` 绑定的是个 `Closure` 呢？例如
+
+```scheme
+(letrec
+	([a 1]
+     [b (lambda () a)])
+	(b))
+```
+
+，此时你的解释器应该输出 `1`。因为 `(lambda () a)` 是个 `Closure`，我们并不会在定义时对它的函数体 `a` 执行与求值，所以解释器不会报错；而当我们真正对 `a` 求值时，所处的作用域 `env2` 里变量 `a` 对应的值即为 `1`，因此没有任何问题。
+
+样例：请参考以上例子。
 
