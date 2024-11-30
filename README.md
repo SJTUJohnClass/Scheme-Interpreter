@@ -374,7 +374,7 @@ expr   -->  Integer
 		|	(begin expr expr*)
 		|	(if expr1 expr2 expr3)
 		|	(quote datum)
-		|   (primitive expr*)
+        |	(primitive expr*)
 ```
 
 ##### 语法：`(begin expr expr*)`
@@ -515,7 +515,7 @@ expr   -->  Integer
 ```scheme
 (let ([x (quote inner)])
 	(let ([func (lambda () x)])
-      (let ([x (quote outer)]) (func))))
+      	(let ([x (quote outer)]) (func))))
 ```
 
 的值应当为 `inner` 而非 `outer`。因此，我们还要对每个函数记录定义该函数时所处的作用域。
@@ -604,7 +604,7 @@ expr   -->  Integer
 		|	(lambda (var*) expr)
 		|	(expr expr*)
 		|	(let ([var expr]*) expr)
-		|	(letrec ([var expr]* expr)
+		|	(letrec ([var expr]*) expr)
 ```
 
 简单来说，新增的两条语法都是在做两件事：首先在当前作用域的基础上创建一个新作用域，并按照某种特定规则引入变量，然后在新作用域上对 `expr` 进行求值。
