@@ -43,13 +43,13 @@ graph LR
 
 ```
 cmake -B build
-cmake --build build --target myscheme
+cmake --build build --target code
 ```
 
 之后， `myscheme` 程序会生成在子目录 `bin` 下， 在根目录下执行
 
 ```
-./bin/myscheme
+./code
 ```
 
 来运行你的解释器。
@@ -95,6 +95,7 @@ cmake --build build --target myscheme
 
 - `parser.cpp` 是你需要实现的 Parser 部分， 你需要填写所有的 `parse()` 函数
 - `evaluation.cpp` 是你需要实现的 Evaluation 部分， 你需要填写所有的 `eval()` 函数
+- 如有需要，你也可以在其它文件中进行改动
 
 对于其他的文件， 它们的用处分别为
 
@@ -110,10 +111,7 @@ cmake --build build --target myscheme
 
 在 OJ 上进行提交测评， 我们也会下发部分数据来帮助你在本地进行调试。
 
-具体而言， 有两种提交到 OJ 的测评方式
-
-- 将整个文件夹压缩成压缩包在题面处上传， OJ 会根据根目录下的 CMakeLists 来构建你的程序。
-- 在代码提交页面输入 `git` 仓库的地址。
+具体而言， 你只需要在代码提交页面输入 `git` 仓库的地址。
 
 #### 调试
 

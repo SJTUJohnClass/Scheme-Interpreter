@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 project (scheme)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 
 set(SOURCES
     ${PROJECT_SOURCE_DIR}/src/main.cpp
@@ -16,9 +16,9 @@ set(SOURCES
     ${PROJECT_SOURCE_DIR}/src/Def.cpp
 )
 
-add_executable(myscheme ${SOURCES})
+add_executable(code ${SOURCES})
 
-target_compile_options(myscheme
+target_compile_options(code
   PRIVATE
     -g
 )
