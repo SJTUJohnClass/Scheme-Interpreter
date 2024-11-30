@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.5)
 
 project (scheme)
 
+if(DEFINED ENV{ONLINE_JUDGE})
+    add_definitions(-DONLINE_JUDGE)
+endif()
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 

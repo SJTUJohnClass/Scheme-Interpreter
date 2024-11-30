@@ -484,7 +484,7 @@ scm> (eq? #t (= 0 0))
 #t
 scm> (eq? (quote ()) (quote ()))
 #t
-scm> (eq? (quote (1 2 3)) (quote 1 2 3))
+scm> (eq? (quote (1 2 3)) (quote (1 2 3)))
 #f
 ```
 

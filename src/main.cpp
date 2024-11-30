@@ -17,6 +17,9 @@ void REPL()
     Assoc global_env = empty();
     while (1)
     {
+        #ifndef ONLINE_JUDGE
+            std::cout << "scm> ";
+        #endif
         Syntax stx = readSyntax(std :: cin); // read
         try
         {
