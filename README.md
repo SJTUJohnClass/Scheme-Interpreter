@@ -371,7 +371,7 @@ expr   -->  Integer
 		|	(begin expr expr*)
 		|	(if expr1 expr2 expr3)
 		|	(quote datum)
-        |	(primitive expr*)
+        	|	(primitive expr*)
 ```
 
 ##### 语法：`(begin expr expr*)`
