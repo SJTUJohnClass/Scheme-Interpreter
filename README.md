@@ -159,7 +159,6 @@ expr   -->  Integer
         |   (lambda (var*) expr)
         |   (let ([var expr]*) expr)
         |   (letrec ([var expr]*) expr)
-        |   (primitive expr*)
         |   (expr expr*)
 ```
 
