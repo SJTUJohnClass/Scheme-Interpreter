@@ -690,14 +690,6 @@ scm> (let ([+ -]) (+ 2 1))
 已经求过, 直接返回值即可. （10pt）
 4. 加入set-car!, set-cdr! 并实现垃圾回收. 建议查询*标记-回收*算法。（15pt）
 5. 试图利用 weak_ptr 保证内存不泄漏。（20pt）
-6. 用scheme的可编程特性, 在scheme中写一个能力相同的Scheme Interpreter。（25pt）
-   
-   比如，
-	```
-	Scheme] (eval (quote (cons 1 2)))
-	(1 . 2)
-	```
-	你可以加入新的语法来简化你的程序。
 
 ### 帮助
 
