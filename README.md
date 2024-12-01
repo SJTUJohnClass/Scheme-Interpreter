@@ -149,7 +149,7 @@ R = 119
 
 ```
 expr   -->  Integer
-		| 	Boolean
+	|   Boolean
         |   (quote datum)
         |   var
         |   (if expr expr expr)
