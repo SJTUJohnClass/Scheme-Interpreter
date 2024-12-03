@@ -312,7 +312,7 @@ scm> #f
 
 ```
 scm> (quote 1)
-1 //注意这里是 Integer 类型
+1 // 注意这里是 Integer 类型
 scm> (quote #t)
 #t // 注意这里是 Boolean 类型
 scm> (quote (+ 1 2 3))
