@@ -153,7 +153,7 @@ expr   -->  Integer
         |   (quote datum)
         |   var
         |   (if expr expr expr)
-        |   (begin expr*)
+        |   (begin expr expr*)
         |   (lambda (var*) expr)
         |   (let ([var expr]*) expr)
         |   (letrec ([var expr]*) expr)
