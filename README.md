@@ -46,7 +46,7 @@ cmake -B build
 cmake --build build --target code
 ```
 
-之后， `myscheme` 程序会生成在子目录 `bin` 下， 在根目录下执行
+之后， `code` 程序会生成在子目录 `bin` 下， 在根目录下执行
 
 ```
 ./code
