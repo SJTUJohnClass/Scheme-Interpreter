@@ -541,7 +541,7 @@ expr   -->  Integer
 样例：
 
 ```
-scm> void // void 变量在当前作用域未定义
+scm> undefined // undefined 变量在当前作用域未定义
 RuntimeError
 scm> + // + 作为 primitive，是一个函数
 #<procedure>
