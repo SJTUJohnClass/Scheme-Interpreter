@@ -212,7 +212,7 @@ scm> -1
 
 提示：在前三个子任务中，你只需要考虑 `primitive` 在 `(primitive expr*)` 中出现的情况。因此，你可以直接将 `syntax` parse 为对应的 `expr`（如 `/src/expr.hpp` 中的 `Plus` 等），然后进行相应的处理。
 
-特别地，当 `primitive` 接收的参数个数或参数类型不符合要求时，你应当及时抛出异常（详见 `RE.hpp` 与 `main.cpp`）。**本次大作业不要求你抛出的异常指明具体的问题，你只需要抛出 `RuntimeError(str)` 即可，`str` 可以是任意字符串。**
+特别地，在 eval 时，当 `primitive` 接收的参数个数或参数类型不符合要求时，你应当及时抛出异常（详见 `RE.hpp` 与 `main.cpp`）。**本次大作业不要求你抛出的异常指明具体的问题，你只需要抛出 `RuntimeError(str)` 即可，`str` 可以是任意字符串。**
 
 样例：
 
@@ -336,6 +336,11 @@ scheme // 注意这里是 Symbol 类型
  |	(cons expr1 expr2)
  | 	(car expr)
  |	(cdr expr)
+ |	(< expr1 expr2)
+ |	(<= expr1 expr2)
+ |	(= expr1 expr2)
+ |	(>= expr1 expr2)
+ |	(> expr1 expr2)
 ```
 
 `(void)` 不接受任何参数，值为 `Void`。
@@ -343,6 +348,8 @@ scheme // 注意这里是 Symbol 类型
 `(cons expr1 expr2)` 表示构造一个 `Pair`，其左值为 `expr1` 的值，右值 `expr2` 的值。它接受两个任意类型的参数，返回对应的 `Pair`。
 
 `(car expr)` 与 `(cdr expr)` 分别表示取一个 `Pair` 的左值和右值。它接受一个类型为 `Pair` 的参数，返回对应的结果。
+
+`(< expr1 expr2)`、`(<= expr1 expr2)`、`(= expr1 expr2)`、`(>= expr1 expr2)`、`(> expr1 expr2)` 表示对应的整数比较。它们接受两个类型为 `Integer` 的参数，值为对应的比较结果，类型为 `Boolean`。
 
 样例：
 
@@ -412,6 +419,14 @@ scm> (if (void) undefined 1)
 RuntimeError // 报错，undefined 变量未定义
 scm> (if #f undefined 1)
 1
+scm> (if #t 1 (+ 1))
+1
+scm> (< 1 2)
+#t
+scm> (>= 1 2)
+#f
+scm> (= #t 1)
+RuntimeError // expr1 的类型不匹配
 ```
 
 #### 语法：`(primitive expr*)`
@@ -441,8 +456,6 @@ scm> (if #f undefined 1)
  |	(eq? expr1 expr2)
 ```
 
-`(< expr1 expr2)`、`(<= expr1 expr2)`、`(= expr1 expr2)`、`(>= expr1 expr2)`、`(> expr1 expr2)` 表示对应的整数比较。它们接受两个类型为 `Integer` 的参数，值为对应的比较结果，类型为 `Boolean`。
-
 `(not expr)` 表示取反操作。它接受一个任意类型的参数，值为对应的取反结果，类型为 `Boolean`。当 `expr` 的值为 `#f` 时，该表达式的值为 `#t`，否则为 `#f`。请注意，它与 `(if expr1 expr2 expr3)` 一样，将 `0` 视为 `#t`。
 
 `(fixnum? expr)`、`(boolean? expr)`、`(null? expr)`、`(pair? expr)`、`(symbol? expr)` 分别表示 `expr` 的值的类型是否为 `Integer`、`Boolean`、`Null`、`Pair`、`Symbol`。它们接受一个任意类型的参数，值为对应的结果，类型为 `Boolean`。
@@ -460,12 +473,6 @@ scm> (if #f undefined 1)
 样例：
 
 ```
-scm> (< 1 2)
-#t
-scm> (>= 1 2)
-#f
-scm> (= #t 1)
-RuntimeError // expr1 的类型不匹配
 scm> (not #f)
 #t
 scm> (not (void))
@@ -574,7 +581,7 @@ scm> (lambda (void) undefined)
 
 ##### 语法：`(expr expr*)`
 
-`(expr expr*)` 表示函数调用，其中 `expr` 的类型应为 `Closure`，`expr*` 的数量应与 `expr` 对应的函数参数数量相等，否则你的解释器应该输出 `RuntimeError`。若 `expr` 为 `primitive`，那么你还需要检查参数类型是否满足要求。
+`(expr expr*)` 表示函数调用，其中 `expr` 的类型应为 `Closure`，eval 时 `expr*` 的数量应与 `expr` 对应的函数参数数量相等，否则你的解释器应该输出 `RuntimeError`。若 `expr` 为 `primitive`，那么你还	需要检查参数类型是否满足要求。
 
 假设 `expr` 对应的 `Clorsure` 类型为 `clos`。在求值时，我们首先在当前作用域对 `expr*` 进行求值，将其与 `expr` 中对应的形参绑定后将其加入 `clos` 的作用域中，形成一个新的作用域，然后在这个新的作用域下对 `clos` 内部的函数体进行求值。
 
